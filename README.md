@@ -22,7 +22,8 @@ I explain more about these files: start.py as user entry point will set some env
 
 Now, the codes uses the Huggingface/HF API to download the model assets form HF model hub. Maybe your SageMaker training job will encounter with the timeout issue when downloading model assets from HF model hub, just restart the SageMaker training job to re-try. Also, you can separatly downlaod the model assets from HF and directly upload them to Amazon S3 (do not tar and compress these files). Then in your training script, please use s5cmd to download them from S3 only on local rank 0 (use the torch.distributed.barrier() to sync up for every rank), it will speed up the model asset downloading compared with downloading them by use of HF API.
 
-Some useful tips:
+### Some useful tips:
+
 1. There is the open source "s5cmd" file in this repo, we can use the "s5cmd" command to speedup the uploading model assets to S3 (do not tar and compress these model assets, just directly upload to S3) after saving model in the container's local path.
 2. When using deepspeed zero stage 2 training LLM on muliple nodes in SageMaker, maybe it will hung untile the NCCL communication is timeout. When it happens, you can check the GPU memory utility of training instances from Amazon cloudwatch. In my experiment, the GPU memory utility is almost full (but OOM didn't occur), it may be a signal that you should switch to zero stage 3 (the issue disappears when I switch to zero 3).
 3. By default, DeepSpeed expects that a multi-nodes environment uses a shared storage. If this is not the case and each node can only see the local filesystem，you need to set the parameter "save_on_each_node" of Seq2SeqTrainingArguments API or TrainingArguments API to true (in this repo, I didn't use share data store such as EFS to save model, so I set the "save_on_each_node" to true).
@@ -82,7 +83,7 @@ Please just ignore the error because the trained model assets have been uploaded
 
 Now, we suggest that trained LLM is deployed by LMI (large model inference) container on SageMaker. LMI support 3 types accelerator: huggingface accelerate, deepspeed inference, faster transformer.
 
-Some useful tips:
+### Some useful tips:
 
 1. For the model trained with pytorch fp16 mixed precision, the torch_dtype in the model’s config.json is also float16, but the model.dtype (such as "model = AutoModelForCausalLM.from_pretrained()") during inference is torch.float32, which is a big Pit (I spent a lot of time on this before I found out).
 
