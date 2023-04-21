@@ -1,0 +1,9 @@
+transformers==4.26.0
+datasets==2.9.0
+accelerate==0.16.0
+evaluate==0.4.0
+deepspeed==0.8.0
+ninja
+rouge-score 
+nltk 
+py7zr
