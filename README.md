@@ -107,7 +107,6 @@ Now, we suggest that trained LLM is deployed by LMI (large model inference) cont
         After enabling this parameter, it need not to recalculate the hiden state of all newly generated tokens when generating the next token each time, thus it will greatly save time, which is a great acceleration for the autoregressive model/causalLM.
 
 
-
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
