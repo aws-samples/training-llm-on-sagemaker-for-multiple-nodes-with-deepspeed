@@ -107,6 +107,7 @@ Now, we suggest that trained LLM is deployed by LMI (large model inference) cont
         When using the HF model for generation, regardless of the pipeline API or the generate API, setting the parameter "use_cache" will speed up the inference speed of the model. For the explanation of "use_cache", please refer to: https://discuss.huggingface.co/t/what-is-the-purpose-of-use-cache-in-decoder/958. 
         After enabling this parameter, it need not to recalculate the hiden state of all newly generated tokens when generating the next token each time, thus it will greatly save time, which is a great acceleration for the autoregressive model/causalLM.
 
+3. For the server side batch in LMI and batch inference for HF pipeline API, please refer to the corresponding code and Readme from my github  https://github.com/yuhuiaws/finetuning-and-deploying-llama-on-Sagemaker/tree/main.
 
 ## Security
 
