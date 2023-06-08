@@ -77,7 +77,8 @@ If you use the torch.distributed.launch, you can utilize the barrier function to
           Exception raised from query at ../aten/src/ATen/cuda/CUDAEvent.h:95 (most recent call first):
 
 Please just ignore the error because the trained model assets have been uploaded to the S3.
- 
+
+13. When enabling RDMA protocol on EFA for P4d/P4de instance, there is very large improvement on deepspeed training speed. Just configure the following env variables in SageMaker SDK API: 'FI_PROVIDER': 'efa', 'NCCL_PROTO': 'simple', 'FI_EFA_USE_DEVICE_RDMA': '1' .  
 
 ## Deploy LLM on SageMaker
 
