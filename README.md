@@ -22,6 +22,37 @@ I explain more about these files: start.py as user entry point will set some env
 
 Now, the codes uses the Huggingface/HF API to download the model assets form HF model hub. Maybe your SageMaker training job will encounter with the timeout issue when downloading model assets from HF model hub, just restart the SageMaker training job to re-try. Also, you can separatly downlaod the model assets from HF and directly upload them to Amazon S3 (do not tar and compress these files). Then in your training script, please use s5cmd to download them from S3 only on local rank 0 (use the torch.distributed.barrier() to sync up for every rank, please refer to https://github.com/yuhuiaws/finetuning-and-deploying-llama-on-Sagemaker/blob/main/finetuning-llama-by-deepspeed/train.py), it will speed up the model asset downloading compared with downloading them by use of HF API.
 
+Maybe the built-in SageMaker Huggingface training container had some changes, it will result in the failure about deepspeed training on SageMaker. The workaroud is as following:
+
+a. Change the requirements.txt as following:
+
+     transformers==4.28.1
+     datasets
+     sentencepiece
+     accelerate
+     evaluate
+     deepspeed==0.9.2
+     ninja
+     rouge-score
+     bitsandbytes
+
+b. Change SageMaker huggingface training container to SageMaker pytorch 1.12 training container:
+
+                from sagemaker.pytorch import PyTorch
+                estimator = PyTorch(entry_point='start.py',
+                             source_dir           = '.', 
+                             instance_type='ml.p4d.24xlarge',
+                             instance_count=2,
+                             role=role,
+                             base_job_name = job_name, 
+                             keep_alive_period_in_seconds=1800,
+                             framework_version='1.12.0',
+                             py_version='py38',
+                             environment = environment,
+                             disable_profiler=True,
+                             debugger_hook_config=False)
+
+
 ### Some useful tips:
 
 1. There is the open source "s5cmd" file in this repo, we can use the "s5cmd" command to speedup the uploading model assets to S3 (do not tar and compress these model assets, just directly upload to S3) after saving model in the container's local path.
