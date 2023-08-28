@@ -40,7 +40,7 @@ b. Change SageMaker huggingface training container to SageMaker pytorch 1.12 tra
 
                 from sagemaker.pytorch import PyTorch
                 estimator = PyTorch(entry_point='start.py',
-                             source_dir           = '.', 
+                             source_dir           = 'src', 
                              instance_type='ml.p4d.24xlarge',
                              instance_count=2,
                              role=role,
