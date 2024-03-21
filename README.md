@@ -36,6 +36,8 @@ a. Change the requirements.txt as following:
      rouge-score
      bitsandbytes
 
+About transformer version, maybe you should upgrade it to 4.36.0 because of the Deserialization of Untrusted Data vulnerability.
+
 b. Change SageMaker huggingface training container to SageMaker pytorch 1.12 training container:
 
                 from sagemaker.pytorch import PyTorch
